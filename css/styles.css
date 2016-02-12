@@ -1,0 +1,22 @@
+body {
+    background-color: #FAEBD7;
+}
+.required_field {
+    color:red;
+}
+#reg_block h2{
+    text-align:center;
+}
+#reg_block input[type="reset"],input[type="submit"] {
+cursor: pointer;
+}
+.error_field {
+    color:red;
+    text-align:center;
+    margin-top:3px;
+}
+.success_field {
+    color:green;
+    text-align:center;
+    font-weight: bold;
+}

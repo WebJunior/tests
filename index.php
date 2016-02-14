@@ -44,16 +44,16 @@ require_once "lib/User.php";
                     $is_error = true;
                 }
                     if($is_error==false) {
-                        $new_user = new User();
-                        if( ($new_user->checkLoginReg($login)==ERROR_CONNECT_DB) || ($new_user->checkLoginReg($login)==LOGIN_BUSY)) {
-                            $error_reg = $new_user->checkLoginReg($login);
+                        $ip = $_SERVER["REMOTE_ADDR"];
+                        $date = date('Y-m-d H:i:s');
+                        $group = "Пользователь";
+                        $salt = rand(324546,679861);
+                        $password = md5(md5($password) . md5($salt));
+                        $new_user = new User($login,$password,$salt,$group,$name,$last_name,$email,$ip,$date);
+                        if( ($new_user->checkLoginReg()==ERROR_CONNECT_DB) || ($new_user->checkLoginReg($login)==LOGIN_BUSY)) {
+                            $error_reg = $new_user->checkLoginReg();
                         }else {
-                            $ip = $_SERVER["REMOTE_ADDR"];
-                            $date = date('Y-m-d H:i:s');
-                            $group = "Пользователь";
-                            $salt = rand(324546,679861);
-                            $password = md5(md5($password) . md5($salt));
-                            if($new_user->addUser($login,$password,$salt,$group,$name,$last_name,$email,$ip,$date)) {
+                            if($new_user->addUser()) {
                                 $success_reg = "Вы успешно зарегистрировались под логином " . $login;
                             }else {
                                 $error_reg = "При регистрации возникла ошибка. Попробуйте снова";

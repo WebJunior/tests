@@ -22,19 +22,19 @@ require_once "lib/User.php";
         $_SESSION["name_reg"] = $name;
         $_SESSION["last_name_reg"] = $last_name;
         $_SESSION["email_reg"] = $email;
-            if( (iconv_strlen($login)==0) || (iconv_strlen($login)<3) ) {
-                $error_login = "Логин должен быть от 3-х символов";
+            if(  (iconv_strlen($login)<3) || (iconv_strlen($login)>20) ) {
+                $error_login = "Логин должен быть от 3-х до 20-ти символов";
                 $is_error = true;
             }
-            if( (iconv_strlen($password)==0) || (iconv_strlen($password)<3) ) {
+            if(  (iconv_strlen($password)<3) || (iconv_strlen($password)>20)) {
                 $error_password = "Пароль должен быть от 3-х символов";
                 $is_error = true;
              }
-            if( (iconv_strlen($password_r)==0) || (iconv_strlen($password_r)<3) ) {
+            if(  (iconv_strlen($password_r)<3) || (iconv_strlen($password_r)>20) ) {
                 $error_password = "Пароль должен быть от 3-х символов";
                 $is_error = true;
             }
-            if( (iconv_strlen($email)==0) || (iconv_strlen($email)<4) ) {
+            if(  (iconv_strlen($email)<4) || (iconv_strlen($email)>20) ) {
                 $error_email = "E-mail должен быть от 4-х символов";
                 $is_error = true;
             }
@@ -49,7 +49,7 @@ require_once "lib/User.php";
                         $group = "Пользователь";
                         $salt = rand(324546,679861);
                         $password = md5(md5($password) . md5($salt));
-                        $new_user = new User($login,$password,$salt,$group,$name,$last_name,$email,$ip,$date);
+                        $new_user = new RegUser($login,$password,$salt,$group,$name,$last_name,$email,$ip,$date);
                         if( ($new_user->checkLoginReg()==ERROR_CONNECT_DB) || ($new_user->checkLoginReg($login)==LOGIN_BUSY)) {
                             $error_reg = $new_user->checkLoginReg();
                         }else {
@@ -66,13 +66,13 @@ require_once "lib/User.php";
 <html>
 <head>
     <meta charset="UTF-8" />
-    <title>Регистрация пользователя ООП</title>
+    <title>Регистрация/Авторизация пользователя ООП</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
 </head>
 <body>
 <div id="reg_block">
     <h2>Регистрация</h2>
-    <form action="" method="post">
+    <form action="index.php" method="post">
         <table align="center">
             <tr>
                 <td><label for="login">Логин<span class="required_field">*</span></label></td>
@@ -99,7 +99,6 @@ require_once "lib/User.php";
                 <td><input type="email" id="email" name="email" maxlength="20" value="<?=$_SESSION["email_reg"]?>" required /></td>
             </tr>
             <tr>
-                <td><input type="reset" value="Очистить форму" /></td>
                 <td><input type="submit" name="reg_user" value="Зарегистрироваться" /></td>
             </tr>
         </table>
@@ -109,6 +108,35 @@ require_once "lib/User.php";
     <div class="error_field"><p><?=$error_email?></p></div>
     <div class="error_field"><p><?=$error_reg?></p></div>
     <div class="success_field"><p><?=$success_reg?></p></div>
+</div>
+<div id="auth_block">
+<?php
+    if (!isset($_SESSION["login"])) {
+   echo '
+        <h2>Авторизация</h2>
+        <form action="auth.php" method="post">
+            <table align="center">
+                <tr>
+                    <td><label for="auth_login">Логин</label></td>
+                    <td><input type="text" name="auth_login" id="auth_login" maxlength="20" /></td>
+                </tr>
+                <tr>
+                    <td><label for="auth_password">Пароль</label></td>
+                    <td><input type="password" name="auth_password" id="auth_password" maxlength="20"  /></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" name="auth_user" value="Вход" /></td>
+                </tr>
+            </table>
+        </form>
+        ';
+} else {
+        echo '<h2>Вы уже авторизованы, ' . $_SESSION["login"] . '</h2>';
+    }
+?>
+    <div class="error_field"><p><?= $_SESSION["error_auth_login"]?></p></div>
+    <div class="error_field"><p><?= $_SESSION["error_auth_password"]?></p></div>
+    <div class="error_field"><p><?= $_SESSION["error_auth"]?></p></div>
 </div>
 </body>
 </html>

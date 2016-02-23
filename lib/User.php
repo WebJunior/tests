@@ -1,5 +1,5 @@
 <?php
-class User {
+class RegUser {
     public $login;
     public $password;
     public $salt;
@@ -56,5 +56,32 @@ class User {
                 }
         $db->close();
         }
+}
+class AuthUser {
+    public $login;
+    public $password;
+    public $group_user;
+    public function __construct($login, $password)
+    {
+        $this->login = $login;
+        $this->password = $password;
+    }
+
+    public function Authorization()
+    {
+        $db = new mysqli (HOST_DB, USER_DB, PASS_DB, DB);
+        $query = $db->query("SELECT `password`,`salt`,`group_user` FROM `users` WHERE `login`='$this->login'");
+        $result = $query->fetch_assoc();
+        if (empty($result)) {
+            return LOGIN_NOT_FOUND;
+        }else {
+            if( $result["password"] != md5(md5($this->password).md5($result["salt"])) ) {
+                return PASSWORD_DNT_MATCH;
+            }else {
+                $this->group_user = $result["group_user"];
+
+            }
+        }
+    }
 }
 ?>

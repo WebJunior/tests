@@ -30,6 +30,11 @@ require_once "lib/User.php";
                     $_SESSION["error_auth"] = "";
                     $_SESSION["group_user"] = $auth_user->group_user;
                     $_SESSION["login"] = $login;
+                        if($_SESSION["group_user"]=="Администратор") {
+                            $_SESSION["admin"] = true;
+                        }else {
+                            $_SESSION["admin"] = false;
+                        }
                     header('Location: cabinet.php');
                 }
             }

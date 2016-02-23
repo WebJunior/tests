@@ -6,4 +6,5 @@ function checkPasswords($p1,$p2) {
         return false;
     }
 }
+
 ?>

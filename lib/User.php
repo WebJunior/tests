@@ -82,6 +82,47 @@ class AuthUser {
 
             }
         }
+        $db->close();
+    }
+}
+
+class InfoUsers {
+
+    public function ShowAllUsers() {
+        $db = new mysqli(HOST_DB,USER_DB,PASS_DB,DB);
+        $query = $db->query("SELECT * FROM `users`");
+        while($res = $query->fetch_assoc()) {
+            echo '<p>
+                 ID:<b> ' . $res["id"] .
+                '</b> Логин:<b> ' .$res["login"] .
+                '</b> Статус:<b> ' .
+                $res["group_user"] .
+                '</b> Имя:<b> ' .
+                $res["name"] .
+                '</b></p>';
+        }
+    }
+
+    public function getInfoById($id) {
+        $id = (int)$id;
+        $db = new mysqli(HOST_DB,USER_DB,PASS_DB,DB);
+        $query = $db->query("SELECT * FROM `users` WHERE `id`='$id'");
+        $result = $query->fetch_assoc();
+            if(empty($result)) {
+                echo "Пользователь с таким id не найден";
+            }else {
+                echo '<p>Информация о пользователе<b> ' . $result["login"] . '</b>:'.'
+                      <p>ID ' . $result["id"] . '</p>'.'
+                      <p>Пароль(хэш) ' . $result["password"] . '</p>'.'
+                      <p>Соль ' .$result["salt"] . '</p>'.'
+                      <p>Статус ' .$result["group_user"] . '</p>'.'
+                      <p>Имя ' .$result["name"] . '</p>'.'
+                      <p>Фамилия ' .$result["last_name"] . '</p>'.'
+                      <p>Email ' .$result["email"] . '</p>'.'
+                      <p>IP ' .$result["ip"] . '</p>'.'
+                      <p>Дата регистрации ' .$result["date"] . '</p>';
+                echo '<p id="hide_info"><a href="cabinet.php">Ок</a><p>';
+            }
     }
 }
 ?>

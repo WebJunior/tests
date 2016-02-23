@@ -37,6 +37,7 @@ cursor: pointer;
     width:350px;
     height:auto;
     border:2px dotted black;
+    float:left;
 
 }
 #block_info_user h3 {
@@ -54,4 +55,20 @@ cursor: pointer;
     text-decoration: none;
     color:black;
     font-weight: bold;
+}
+
+#block_all_users {
+    width:500px;
+    height:auto;
+    border:2px dotted black;
+    margin:0 auto;
+}
+#block_all_users h2 {
+    text-align:center;
+}
+#hide_info {
+    width:25px;
+    color:black;
+    background-color: darkseagreen;
+    border-radius: 5px;
 }
